@@ -1,6 +1,6 @@
 export class CreateAnimeDto {
     title: string;
-    description: String;
+    description: string;
     studio: string;
     date_aired: Date;
 }

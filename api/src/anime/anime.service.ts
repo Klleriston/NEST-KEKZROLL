@@ -1,26 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAnimeDto } from './dto/create-anime.dto';
-import { UpdateAnimeDto } from './dto/update-anime.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AnimeService {
-  create(createAnimeDto: CreateAnimeDto) {
-    return 'This action adds a new anime';
+  constructor(private readonly prismaService: PrismaService) {}
+  async create(createAnimeDto: CreateAnimeDto) {
+    return this.prismaService.anime.create({
+      data: {
+        ...createAnimeDto,
+      },
+    });
   }
 
-  findAll() {
-    return `This action returns all anime`;
+  async findAll() {
+    return this.prismaService.anime.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} anime`;
+  async findOne(id: number) {
+    return this.prismaService.anime.findUnique({
+      where: {
+        anime_id: id,
+      },
+    }); 
   }
 
-  update(id: number, updateAnimeDto: UpdateAnimeDto) {
-    return `This action updates a #${id} anime`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} anime`;
+  async remove(id: number) {
+    return this.prismaService.anime.delete({
+      where: {
+        anime_id: id,
+      },
+    });
   }
 }
