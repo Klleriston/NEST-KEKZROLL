@@ -13,14 +13,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// model User {
+model User {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  email     String    @unique 
+  password  String
 
-// }
+  favorites User_favorites[]
+}
 
-// model Anime {
+model Anime {
+  anime_id    Int       @id @default(autoincrement())
+  title       String
+  description String
+  studio     String?
+  date_aired  DateTime?
 
-// }
+  favorites User_favorites[]
+}
 
-// model User_favorites {
-
-// }
+model User_favorites {
+  user_id Int
+  anime_id Int
+  user   User @relation(fields: [user_id], references: [id])
+  anime  Anime @relation(fields: [anime_id], references: [anime_id])
+  @@id([user_id, anime_id])
+}
