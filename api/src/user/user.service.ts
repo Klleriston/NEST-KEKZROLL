@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -14,11 +14,13 @@ export class UserService {
   }
 
   async findAll() {
-    return this.prismaService.user.findMany();
+    if (this.prismaService.user === null) return "No users found!" 
+    return await this.prismaService.user.findMany();
   }
 
   async findOne(id: number) {
-    return this.prismaService.user.findUnique({
+    if (this.prismaService.user == null) return "No users found!" 
+    return await this.prismaService.user.findUnique({
       where: {
         id: id,
       },
@@ -26,10 +28,32 @@ export class UserService {
   }
 
   async remove(id: number) {
-    return this.prismaService.user.delete({
-      where: {
-        id: id,
-      },
-    });
+    try {
+      const user = await this.prismaService.user.findFirst({
+        where: {
+          id: id,
+        },
+      });
+
+      if (user == null) {
+        throw new NotFoundException('User not found');
+      }
+
+      await this.prismaService.user.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      return 'User deleted successfully';
+    } catch (error) {
+      console.error(error.message);
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      throw new InternalServerErrorException('An unexpected error occurred');
+    }
   }
 }
