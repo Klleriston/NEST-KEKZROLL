@@ -1,59 +1,64 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HelpersService } from 'src/helpers/helpers.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly helpersService: HelpersService,
+  ) {}
+
   async create(createUserDto: CreateUserDto) {
-    return this.prismaService.user.create({
-      data: {
-        ...createUserDto,
-      },
-    });
+    try {
+      const user = await this.prismaService.user.create({
+        data: {
+          ...createUserDto,
+        },
+      });
+     return {message: 'User created successfully:', user} 
+    } catch (error) {
+      return this.helpersService.badRequest('User not created');
+    }
   }
 
   async findAll() {
-    if (this.prismaService.user === null) return "No users found!" 
-    return await this.prismaService.user.findMany();
+    const users = await this.prismaService.user.findMany();
+    if (users.length == 0) {
+      return this.helpersService.noContent('');
+    }
+    return users;
   }
 
-  async findOne(id: number) {
-    if (this.prismaService.user == null) return "No users found!" 
-    return await this.prismaService.user.findUnique({
-      where: {
-        id: id,
-      },
+  async findOne(id: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: id },
     });
+    if (!user) {
+      return this.helpersService.notFound('User not found');
+    }
+    return user;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
+    const user = await this.prismaService.user.findFirst({
+      where: { id: id },
+    });
+    if (!user) {
+      return this.helpersService.notFound('User not found');
+    }
     try {
-      const user = await this.prismaService.user.findFirst({
-        where: {
-          id: id,
-        },
-      });
-
-      if (user == null) {
-        throw new NotFoundException('User not found');
-      }
-
       await this.prismaService.user.delete({
-        where: {
-          id: id,
-        },
+        where: { id: id },
       });
-
       return 'User deleted successfully';
     } catch (error) {
-      console.error(error.message);
-
-      if (error instanceof NotFoundException) {
-        throw error;
-      }
-
-      throw new InternalServerErrorException('An unexpected error occurred');
+      this.helpersService.internalServerError('User not deleted');
     }
   }
 }
