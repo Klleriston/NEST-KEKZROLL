@@ -36,7 +36,7 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.prismaService.user.findFirst({
+    const user = await this.prismaService.user.findUnique({
       where: { id: id },
     });
     if (!user) {
