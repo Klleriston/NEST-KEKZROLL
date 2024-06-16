@@ -8,6 +8,7 @@ Projeto que consiste em um CRUD com autenticação via JWT e testes JEST, permit
 - NestJS (latest)
 - Prisma ORM (latest)
 - JWT (JSON Web Token)
+- JEST (Testing)
 - Postman (para testes de requisição)
 - Visual Studio Code
 
