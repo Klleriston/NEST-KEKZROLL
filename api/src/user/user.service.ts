@@ -46,17 +46,17 @@ export class UserService {
   }
 
   async remove(id: string) {
-    const user = await this.prismaService.user.findFirst({
+    const user = await this.prismaService.user.findUnique({
       where: { id: id },
     });
     if (!user) {
-      return this.helpersService.notFound('User not found');
+      return this.helpersService.badRequest('User not found');
     }
     try {
       await this.prismaService.user.delete({
         where: { id: id },
       });
-      return 'User deleted successfully';
+      return {message: "User deleted successfully"};
     } catch (error) {
       this.helpersService.internalServerError('User not deleted');
     }
