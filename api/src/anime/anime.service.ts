@@ -17,7 +17,7 @@ export class AnimeService {
     return this.prismaService.anime.findMany();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     return this.prismaService.anime.findUnique({
       where: {
         anime_id: id,
@@ -25,7 +25,7 @@ export class AnimeService {
     }); 
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     return this.prismaService.anime.delete({
       where: {
         anime_id: id,

@@ -11,11 +11,11 @@ export class UserFavoritesService {
     return `This action returns all userFavorites`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} userFavorite`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} userFavorite`;
   }
 }

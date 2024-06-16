@@ -18,11 +18,11 @@ export class AnimeController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.animeService.findOne(+id);
+    return this.animeService.findOne(id);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.animeService.remove(+id);
+    return this.animeService.remove(id);
   }
 }

@@ -8,10 +8,12 @@ import { AnimeModule } from './anime/anime.module';
 import { UserFavoritesModule } from './user-favorites/user-favorites.module';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
+import { HelpersModule } from './helpers/helpers.module';
+import { HelpersService } from './helpers/helpers.service';
 
 @Module({
-  imports: [UserModule, AnimeModule, UserFavoritesModule, PrismaModule],
+  imports: [UserModule, AnimeModule, UserFavoritesModule, PrismaModule, HelpersModule],
   controllers: [UserController, AnimeController],
-  providers: [UserService, AnimeService, PrismaService],
+  providers: [UserService, AnimeService, PrismaService, HelpersService],
 })
 export class AppModule {}

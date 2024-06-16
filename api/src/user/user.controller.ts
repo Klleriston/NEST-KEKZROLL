@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -7,33 +7,27 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  @HttpCode(201)
+  async create(@Body() createUserDto: CreateUserDto) {
+    const result = await this.userService.create(createUserDto);
+    return result;
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  @HttpCode(200)
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @HttpCode(200)
+  async findOne(@Param('id') id: string) {
+    return await this.userService.findOne(id);
   }
 
   @Delete(':id')
+  @HttpCode(200)
   async remove(@Param('id') id: string) {
-    try {
-      const result = await this.userService.remove(Number(id));
-      return result;
-    } catch (error) {
-      if (error instanceof NotFoundException) {
-        throw new HttpException(error.message, HttpStatus.NOT_FOUND);
-      } else {
-        throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
-      }
-    }
-    
+    return await this.userService.remove(id);
   }
 }
-
