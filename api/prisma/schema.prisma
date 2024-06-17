@@ -23,10 +23,10 @@ model User {
 }
 
 model Anime {
-  anime_id    String       @id @default(uuid())
+  id          String       @id @default(uuid())
   title       String
   description String
-  studio     String?
+  studio      String?
   date_aired  DateTime?
 
   favorites User_favorites[]
@@ -36,6 +36,6 @@ model User_favorites {
   user_id String
   anime_id String
   user   User @relation(fields: [user_id], references: [id])
-  anime  Anime @relation(fields: [anime_id], references: [anime_id])
+  anime  Anime @relation(fields: [anime_id], references: [id])
   @@id([user_id, anime_id])
 }
