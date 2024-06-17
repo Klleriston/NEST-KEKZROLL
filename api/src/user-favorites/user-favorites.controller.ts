@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UserFavoritesService } from './user-favorites.service';
 import { CreateUserFavoriteDto } from './dto/create-user-favorite.dto';
 
-@Controller('user-favorites')
+@Controller('favorites')
 export class UserFavoritesController {
   constructor(private readonly userFavoritesService: UserFavoritesService) {}
 

@@ -1,3 +1,4 @@
 export class CreateUserFavoriteDto {
-    animeTitles: string[];
-}
+    user_id: string;
+    anime_title: string; 
+} 
