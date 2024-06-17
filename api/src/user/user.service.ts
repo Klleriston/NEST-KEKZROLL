@@ -29,33 +29,21 @@ export class UserService {
 
   async findAll() {
     const users = await this.prismaService.user.findMany();
-    if (users.length == 0) {
-      return this.helpersService.noContent('');
-    }
+    if (users.length == 0) return this.helpersService.noContent('');
     return users;
   }
 
   async findOne(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: id },
-    });
-    if (!user) {
-      return this.helpersService.notFound('User not found');
-    }
+    const user = await this.prismaService.user.findUnique({ where: { id: id } });
+    if (!user) return this.helpersService.notFound('User not found');
     return user;
   }
 
   async remove(id: string) {
-    const user = await this.prismaService.user.findUnique({
-      where: { id: id },
-    });
-    if (!user) {
-      return this.helpersService.badRequest('User not found');
-    }
+    const user = await this.prismaService.user.findUnique({  where: { id: id } });
+    if (!user) return this.helpersService.badRequest('User not found');
     try {
-      await this.prismaService.user.delete({
-        where: { id: id },
-      });
+      await this.prismaService.user.delete({ where: { id: id } });
       return {message: "User deleted successfully"};
     } catch (error) {
       this.helpersService.internalServerError('User not deleted');
