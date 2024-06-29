@@ -37,21 +37,4 @@ export class UserFavoritesService {
     if (lists.length == 0) return this.helpersService.noContent('');
     return lists;
   }
-
-  async findOne(user_id: string, anime_id: string) {
-    const list = await this.prismaService.user_favorites.findUnique({
-      where: {
-        user_id_anime_id: {
-          user_id,
-          anime_id,
-        },
-      }
-    });
-    if(!list) return this.helpersService.notFound('List no found')
-    return list;
-  }
-
-  async remove(user_id: string, anime_id: string) {
-     
-  }
 }
