@@ -12,6 +12,7 @@ export class AnimeService {
 
   async create(createAnimeDto: CreateAnimeDto) {
     try {
+      createAnimeDto.date_aired = new Date(createAnimeDto.date_aired);
       const anime = await this.prismaService.anime.create({
         data: {
           ...createAnimeDto,
@@ -30,17 +31,21 @@ export class AnimeService {
   }
 
   async findOne(id: string) {
-    const anime = await this.prismaService.anime.findUnique({ where: { id: id } } );
+    const anime = await this.prismaService.anime.findUnique({
+      where: { id: id },
+    });
     if (!anime) return this.helpersService.notFound('Anime not found');
     return anime;
   }
 
   async remove(id: string) {
-    const anime = await this.prismaService.anime.findUnique({where:{id:id}});
+    const anime = await this.prismaService.anime.findUnique({
+      where: { id: id },
+    });
     if (!anime) return this.helpersService.badRequest('Anime not found');
     try {
       await this.prismaService.anime.delete({ where: { id: id } });
-      return {message: "Anime deleted successfully"};
+      return { message: 'Anime deleted successfully' };
     } catch (error) {
       this.helpersService.internalServerError('Anime not deleted');
     }
