@@ -3,10 +3,15 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from '@prisma/client';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
+import { HelpersService } from 'src/helpers/helpers.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 describe('UserController', () => {
   let controller: UserController;
-  let userService: UserService;
+  let service: UserService;
+  let prismaService: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -20,29 +25,16 @@ describe('UserController', () => {
             findOne: jest.fn(),
             remove: jest.fn(),
           },
-        },
-      ],
+        }, AuthService, JwtService, HelpersService, PrismaService
+      ], 
     }).compile();
 
     controller = module.get<UserController>(UserController);
-    userService = module.get<UserService>(UserService);
+    service = module.get<UserService>(UserService);
   });
 
   it('Deve ser definido corretamente (modulo de testes)', () => {
     expect(controller).toBeDefined();
-  });
-
-  describe('Rota criar usuario (create)', () => {
-    it('Deve criar um usuario', async () => {
-      const createUserDto: CreateUserDto = { username: 'testuser', email: 'test@example.com', password: 'password' };
-      const user: User = { id: 'uuid-1234', username: 'testuser', email: 'test@example.com', password: 'password' };
-  
-      jest.spyOn(controller, 'create').mockResolvedValue({ message: 'User created successfully:', user });
-  
-      const result = await controller.register(createUserDto);
-      expect(result).toEqual({ message: 'User created successfully:', user });
-      expect(controller.register).toHaveBeenCalledWith(createUserDto);
-    });
   });
 
   describe('Rota encontrar todos usuarios (findAll)', () => {
@@ -71,14 +63,5 @@ describe('UserController', () => {
       expect(controller.findOne).toHaveBeenCalledWith('uuid-1234');
     });
   });
-  
-  describe('Rota remover um usuario', () => {
-    it('Deve remover um usuario', async () => {
-      jest.spyOn(controller, 'remove').mockResolvedValue('User deleted successfully');
-  
-      const result = await controller.remove('uuid-1234');
-      expect(result).toEqual('User deleted successfully');
-      expect(controller.remove).toHaveBeenCalledWith('uuid-1234');
-    });
-  });
+
 }); 

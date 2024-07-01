@@ -10,14 +10,6 @@ export class UserController {
     private readonly authService: AuthService
   ) {}
 
-  @Post()
-  @HttpCode(201)
-  async register(@Body() createUserDto: CreateUserDto) {
-    const user = await this.userService.create(createUserDto);
-    const token = await this.authService.generateJWTToken(user);
-    return {user, ...token};
-  }
-
   @Get()
   @HttpCode(200)
   async findAll() {

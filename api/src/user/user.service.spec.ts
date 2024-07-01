@@ -5,6 +5,7 @@ import { HelpersService } from '../helpers/helpers.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from '@prisma/client';
 import { HttpException } from '@nestjs/common';
+import { AuthService } from 'src/auth/auth.service';
 
 describe('UserService', () => {
   //instancias dos servicos que serao testados
@@ -27,8 +28,8 @@ describe('UserService', () => {
               findUnique: jest.fn(),
               delete: jest.fn(),
               update: jest.fn(),
-            },
-          },
+            }, AuthService
+          }, 
         },
         {
           provide: HelpersService,
@@ -77,13 +78,13 @@ describe('UserService', () => {
       const createUserDto: CreateUserDto = {
         username: 'testuser',
         email: 'test@example.com',
-        password: 'password',
+        password: "senha",
       };
       const user: User = {
         id: 'uuid-1234',
         username: 'testuser',
         email: 'test@example.com',
-        password: 'password',
+        password:  "senha",
       };
 
       jest.spyOn(prismaService.user, 'create').mockResolvedValue(user);
