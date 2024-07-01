@@ -8,6 +8,7 @@ Projeto que consiste em um CRUD com testes JEST, permitindo que o usuário crie 
 - NestJS (latest)
 - Prisma ORM (latest)
 - JEST (Testing)
+- JWT
 - Postman (para testes de requisição)
 - Visual Studio Code
 
