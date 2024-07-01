@@ -6,6 +6,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HelpersService } from 'src/helpers/helpers.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -16,9 +17,11 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     try {
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
       const user = await this.prismaService.user.create({
         data: {
           ...createUserDto,
+          password: hashedPassword
         },
       });
      return {message: 'User created successfully:', user} 
@@ -37,6 +40,12 @@ export class UserService {
     const user = await this.prismaService.user.findUnique({ where: { id: id } });
     if (!user) return this.helpersService.notFound('User not found');
     return user;
+  }
+
+  async findOneByEmail(email:string) {
+    const user = await this.prismaService.user.findUnique({where:{email}})
+    if (!user) return this.helpersService.notFound('User not found');
+    return user
   }
 
   async remove(id: string) {

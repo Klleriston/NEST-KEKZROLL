@@ -10,10 +10,12 @@ import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { HelpersModule } from './helpers/helpers.module';
 import { HelpersService } from './helpers/helpers.service';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
 
 @Module({
-  imports: [UserModule, AnimeModule, UserFavoritesModule, PrismaModule, HelpersModule],
+  imports: [UserModule, AnimeModule, UserFavoritesModule, PrismaModule, HelpersModule, AuthModule],
   controllers: [UserController, AnimeController],
-  providers: [UserService, AnimeService, PrismaService, HelpersService],
+  providers: [UserService, AnimeService, PrismaService, HelpersService, AuthService],
 })
 export class AppModule {}

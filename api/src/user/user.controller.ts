@@ -1,16 +1,21 @@
 import { Controller, Get, Post, Body, Param, Delete, HttpCode } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService
+  ) {}
 
   @Post()
   @HttpCode(201)
-  async create(@Body() createUserDto: CreateUserDto) {
-    const result = await this.userService.create(createUserDto);
-    return result;
+  async register(@Body() createUserDto: CreateUserDto) {
+    const user = await this.userService.create(createUserDto);
+    const token = await this.authService.generateJWTToken(user);
+    return {user, ...token};
   }
 
   @Get()
